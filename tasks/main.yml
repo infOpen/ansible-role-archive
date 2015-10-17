@@ -46,7 +46,7 @@
       -H {{ item.ssh.remote_host }}
       -s {{ item.ssh.remote_script }}
       -t {{ item.ssh.remote_directory }}
-    insert_before : archive-files.sh
+    insertbefore : archive-files.sh
   with_items : archive_files_tasks
   when :
     - item.ssh.remote_username
@@ -62,7 +62,7 @@
       SSH_ARGS=-u {{ item.ssh.remote_username }}
       -H {{ item.ssh.remote_host }}
       -t {{ item.ssh.remote_directory }}"
-    insert_before : archive-files.sh
+    insertbefore : archive-files.sh
   with_items : archive_files_tasks
   when :
     - item.ssh.remote_username
@@ -75,7 +75,7 @@
   lineinfile :
     dest : "/etc/cron.d/{{ item.cron.cronfile }}"
     line     : "SQL_DATABASES=-m -d {{ item.sql.mysql_databases | join(' -d ') }}"
-    insert_before : archive-files.sh
+    insertbefore : archive-files.sh
   with_items : archive_files_tasks
   when :
     - item.sql.do_mysql_backup == True
@@ -86,7 +86,7 @@
   lineinfile :
     dest : "/etc/cron.d/{{ item.cron.cronfile }}"
     line : "FILES=-r -f {{ item.files.files_list | join(' -f ') }}"
-    insert_before : archive-files.sh
+    insertbefore : archive-files.sh
   with_items : archive_files_tasks
   when :
     - item.files.files_list
@@ -97,7 +97,7 @@
   lineinfile :
     dest : "/etc/cron.d/{{ item.cron.cronfile }}"
     line : "FILES=-f {{ item.files.files_list | join(' -f ') }}"
-    insert_before : archive-files.sh
+    insertbefore : archive-files.sh
   with_items : archive_files_tasks
   when :
     - item.files.files_list
@@ -108,7 +108,7 @@
   lineinfile :
     dest : "/etc/cron.d/{{ item.cron.cronfile }}"
     line : "ERROR_LOG=-e {{ item.logging.error_log_file }}"
-    insert_before : archive-files.sh
+    insertbefore : archive-files.sh
   with_items : archive_files_tasks
   when :
     - item.logging.error_log_file
@@ -118,7 +118,7 @@
   lineinfile :
     dest : "/etc/cron.d/{{ item.cron.cronfile }}"
     line : "MAIN_LOG=-e {{ item.logging.main_log_file }}"
-    insert_before : archive-files.sh
+    insertbefore : archive-files.sh
   with_items : archive_files_tasks
   when :
     - item.logging.main_log_file
@@ -128,5 +128,5 @@
   lineinfile :
     dest : "/etc/cron.d/{{ item.cron.cronfile }}"
     line : "BACKUP_DIR=-p {{ item.backup_directory }}"
-    insert_before : archive-files.sh
+    insertbefore : archive-files.sh
   with_items : archive_files_tasks
