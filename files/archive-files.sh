@@ -69,6 +69,7 @@ display_help() {
     console "    -p        Backup directory"
     console " "
     console "  Database backups :"
+    console "    -c        Cnf file with credentials"
     console "    -d        Do database backup, can be set multiple times"
     console "    -m        Do a mysql backup task, need at least one database"
     console " "
