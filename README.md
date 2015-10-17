@@ -28,8 +28,9 @@ Follow the possible variables with their default values
     archive_files_tasks : []
 
     # Task definition example :
-    # - cronfile : "foo"
-    #   cron :
+    # - cron :
+    #     cronfile  : "foo"
+    #     name      : "bar"
     #     user      : "root"
     #     minute    : 0
     #     hour      : 23
