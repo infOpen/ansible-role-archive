@@ -4,5 +4,35 @@
 
 - hosts: localhost
   remote_user: root
+  vars :
+    archive_files_tasks :
+      - cron :
+          name : "coucocu"
+          cronfile : "foo"
+          user      : "root"
+          minute    : 0
+          hour      : 23
+          month_day : "*"
+          month     : "*"
+          week_day  : "*"
+        backup_directory : "qsdqsdqsd"
+        sql  :
+          do_mysql_backup  : False
+          mysql_databases  :
+            - a
+            - b
+        files :
+          do_recursive_backup : False
+          files_list          :
+            - foo
+            - bar
+        logging :
+          main_log_file  : "pwet.log"
+          error_log_file : "go.log"
+        ssh :
+          remote_username  : ""
+          remote_host      : ""
+          remote_directory : ""
+          remote_script    : ""
   roles:
     - ansible-role-archive-files
