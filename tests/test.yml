@@ -17,6 +17,7 @@
           week_day  : "*"
         backup_directory : "qsdqsdqsd"
         sql  :
+          credential_file  : "/root/.mysql.cnf"
           do_mysql_backup  : False
           mysql_databases  :
             - a

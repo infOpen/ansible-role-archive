@@ -74,7 +74,9 @@
 - name : Deploy crontabs SQL vars
   lineinfile :
     dest : "/etc/cron.d/{{ item.cron.cronfile }}"
-    line     : "SQL_DATABASES=-m -d {{ item.sql.mysql_databases | join(' -d ') }}"
+    line     : >
+        SQL_DATABASES=-m -c {{ credential_file }}
+        -d {{ item.sql.mysql_databases | join(' -d ') }}
     insertbefore : archive-files.sh
   with_items : archive_files_tasks
   when :

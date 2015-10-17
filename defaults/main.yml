@@ -23,6 +23,7 @@ archive_files_tasks : []
 #     week_day  : "*"
 #   backup_directory : ""
 #   sql  :
+#     credential_file  : "/root/.my.cnf"
 #     do_mysql_backup  : False
 #     mysql_databases  : []
 #   files :
