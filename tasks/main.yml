@@ -132,3 +132,9 @@
     line : "BACKUP_DIR=-p {{ item.backup_directory }}"
     insertbefore : archive-files.sh
   with_items : archive_files_tasks
+
+
+- name : Reload cron process
+  service :
+    name  : cron
+    state : reloaded
