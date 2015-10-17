@@ -1,0 +1,38 @@
+---
+
+# Defaults file for archive-files
+
+# Common settings
+archive_files_script_destination : "/root/scripts"
+archive_files_script_mode        : "0700"
+archive_files_script_owner       : "root"
+archive_files_script_group       : "root"
+
+# Tasks
+archive_files_tasks : []
+
+# Task definition example :
+# - cron :
+#     cronfile  : "foo"
+#     name      : "bar"
+#     user      : "root"
+#     minute    : 0
+#     hour      : 23
+#     month_day : "*"
+#     month     : "*"
+#     week_day  : "*"
+#   backup_directory : ""
+#   sql  :
+#     do_mysql_backup  : False
+#     mysql_databases  : []
+#   files :
+#     do_recursive_backup : False
+#     files_list          : []
+#   logging :
+#     main_log_file  : ""
+#     error_log_file : ""
+#   ssh :
+#     remote_username  : ""
+#     remote_host      : ""
+#     remote_directory : ""
+#     remote_script    : ""

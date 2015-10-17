@@ -1,0 +1,134 @@
+---
+
+# Tasks file for archive-files
+
+- name : Create destination folder if needed
+  file :
+    dest : "{{ archive_files_script_destination }}"
+    state : directory
+    mode  : "{{ archive_files_script_mode }}"
+    owner : "{{ archive_files_script_owner }}"
+    group : "{{ archive_files_script_group }}"
+
+- name : Deploy archive script
+  copy :
+    src   : "{{ role_path }}/files/archive-files.sh"
+    dest  : "{{ archive_files_script_destination }}/"
+    mode  : "{{ archive_files_script_mode }}"
+    owner : "{{ archive_files_script_owner }}"
+    group : "{{ archive_files_script_group }}"
+
+
+- name : Deploy crontabs SSH vars with remote script
+  cronvar :
+    cron_file : "{{ item.cron.cronfile }}"
+    name      : "SSH_ARGS"
+    value     : >
+      -u {{ item.ssh.remote_username }}
+      -H {{ item.ssh.remote_host }}
+      -s {{ item.ssh.remote_script }}
+      -t {{ item.ssh.remote_directory }}
+  with_items : archive_files_tasks
+  when :
+    - item.ssh.remote_username
+    - item.ssh.remote_host
+    - item.ssh.remote_directory
+    - item.ssh.remote_script
+
+
+- name : Deploy crontabs SSH vars without remote script
+  cronvar :
+    cron_file : "{{ item.cron.cronfile }}"
+    name      : "SQL_DATABASES"
+    value     : >
+      -u {{ item.ssh.remote_username }}
+      -H {{ item.ssh.remote_host }}
+      -t {{ item.ssh.remote_directory }}"
+  with_items : archive_files_tasks
+  when :
+    - item.ssh.remote_username
+    - item.ssh.remote_host
+    - item.ssh.remote_directory
+    - item.ssh.remote_script == False
+
+
+- name : Deploy crontabs SQL vars
+  cronvar :
+    cron_file : "{{ item.cron.cronfile }}"
+    name      : "SQL_DATABASES"
+    value     : "-m -d {{ item.sql.mysql_databases | join(' -d ') }}"
+  with_items : archive_files_tasks
+  when :
+    - item.sql.do_mysql_backup == True
+    - item.sql.mysql_databases
+
+
+- name : Deploy crontabs FILES vars with recurse
+  cronvar :
+    cron_file : "{{ item.cron.cronfile }}"
+    name      : "FILES"
+    value     : "-r -f {{ item.files.files_list | join(' -f ') }}"
+  with_items : archive_files_tasks
+  when :
+    - item.files.files_list
+    - item.files.do_recursive_backup
+
+
+- name : Deploy crontabs FILES vars without recurse
+  cronvar :
+    cron_file : "{{ item.cron.cronfile }}"
+    name      : "FILES"
+    value     : "-f {{ item.files.files_list | join(' -f ') }}"
+  with_items : archive_files_tasks
+  when :
+    - item.files.files_list
+    - item.files.do_recursive_backup == False
+
+
+- name : Deploy crontabs ERROR_LOG var
+  cronvar :
+    cron_file : "{{ item.cron.cronfile }}"
+    name      : "ERROR_LOG"
+    value     : "-e {{ item.logging.error_log_file }}"
+  with_items : archive_files_tasks
+  when :
+    - item.logging.error_log_file
+
+
+- name : Deploy crontabs MAIN_LOG var
+  cronvar :
+    cron_file : "{{ item.cron.cronfile }}"
+    name      : "MAIN_LOG"
+    value     : "-e {{ item.logging.main_log_file }}"
+  with_items : archive_files_tasks
+  when :
+    - item.logging.main_log_file
+
+
+- name : Deploy crontabs BACKUP_DIR var
+  cronvar :
+    cron_file : "{{ item.cron.cronfile }}"
+    name      : "BACKUP_DIR"
+    value     : "-p {{ item.backup_directory }}"
+  with_items : archive_files_tasks
+
+
+- name : Deploy crontabs tasks
+  cron :
+    cron_file : "{{ item.cron.cronfile }}"
+    name      : "{{ item.cron.name }}"
+    job       : >
+      {{ archive_files_script_destination }}/archive-files.sh
+      ${BACKUP_DIR}
+      ${SQL_DATABASES}
+      ${FILES}
+      ${MAIN_LOG}
+      ${ERROR_LOG}
+    user      : "{{ item.cron.user      | default('root') }}"
+    minute    : "{{ item.cron.minute    | default('0')    }}"
+    hour      : "{{ item.cron.hour      | default('23')   }}"
+    day       : "{{ item.cron.month_day | default('*')    }}"
+    month     : "{{ item.cron.month     | default('*')    }}"
+    weekday   : "{{ item.cron.week_day  | default('*')    }}"
+    state     : present
+  with_items : archive_files_tasks
