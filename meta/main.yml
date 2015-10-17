@@ -5,7 +5,7 @@ galaxy_info:
   description: Install backup files script
   company: Infopen (http://infopen.pro)
   license: MIT
-  min_ansible_version: 1.5
+  min_ansible_version: 2.0
 
   platforms:
     - name: Ubuntu
