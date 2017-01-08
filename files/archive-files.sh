@@ -96,7 +96,7 @@ backup_mysql_databases() {
 
     # A mysql backup nead at least one database to backup
     if [[ ${#databases[@]} -le 0 ]]; then
-        err "Error : Mysql backup need at leat one database"
+        err "Error : Mysql backup need at least one database"
         display_help
     fi
 
